@@ -1,0 +1,341 @@
+/* Weft landing — blue-dominant palette, animated SVG mesh.
+   Tokens defined for both light + dark mode ; everything below
+   the :root block reads from them so a theme change touches one
+   place. */
+:root {
+  --fg:        #0b1733;
+  --bg:        #f4f7ff;
+  --bg-2:      #e6edff;
+  --muted:     #4a5e8a;
+  --accent:    #2563eb;
+  --accent-2:  #60a5fa;
+  --accent-3:  #93c5fd;
+  --code-bg:   #e1eaff;
+  --border:    #c7d5f5;
+  --thread:    #2563eb;
+  --mesh-edge:        rgba(37, 99, 235, 0.32);
+  --mesh-edge-hi:     rgba(37, 99, 235, 0.85);
+  --mesh-cp-fill:     #1d4ed8;
+  --mesh-cp-halo:     rgba(29, 78, 216, 0.30);
+  --mesh-agent-fill:  #60a5fa;
+  --mesh-agent-halo:  rgba(96, 165, 250, 0.22);
+  --mesh-arch-fill:   #2563eb;
+  --mesh-arch-halo:   rgba(37, 99, 235, 0.30);
+  --mesh-distro-fill: #60a5fa;
+  --mesh-distro-halo: rgba(96, 165, 250, 0.22);
+  --mesh-hub-fill:    #1d4ed8;
+  --mesh-hub-halo:    rgba(29, 78, 216, 0.36);
+  --mesh-microvm-fill:  #38bdf8;
+  --mesh-microvm-halo:  rgba(56, 189, 248, 0.45);
+  --mesh-edge-mesh:     rgba(56, 189, 248, 0.75);
+  --mesh-infra-fill:    #818cf8;
+  --mesh-infra-halo:    rgba(129, 140, 248, 0.45);
+  --mesh-infra-label:   rgba(67, 56, 202, 0.95);
+  --mesh-label-fg:    #1e3a8a;
+  --mesh-container-dc-fill:     rgba(37, 99, 235, 0.06);
+  --mesh-container-dc-stroke:   rgba(37, 99, 235, 0.55);
+  --mesh-container-rack-fill:   rgba(37, 99, 235, 0.14);
+  --mesh-container-rack-stroke: rgba(37, 99, 235, 0.45);
+  --mesh-container-label-fg:    rgba(30, 58, 138, 0.85);
+  --hero-gradient-1:  rgba(96, 165, 250, 0.25);
+  --hero-gradient-2:  rgba(37, 99, 235, 0.18);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg:        #dde7ff;
+    --bg:        #060c1e;
+    --bg-2:      #0c1633;
+    --muted:     #8aa0d4;
+    --accent:    #60a5fa;
+    --accent-2:  #93c5fd;
+    --accent-3:  #bfdbfe;
+    --code-bg:   #0f1c3d;
+    --border:    #1f3060;
+    --thread:    #60a5fa;
+    --mesh-edge:        rgba(147, 197, 253, 0.32);
+    --mesh-edge-hi:     rgba(191, 219, 254, 0.85);
+    --mesh-cp-fill:     #93c5fd;
+    --mesh-cp-halo:     rgba(147, 197, 253, 0.30);
+    --mesh-agent-fill:  #60a5fa;
+    --mesh-agent-halo:  rgba(96, 165, 250, 0.22);
+    --mesh-arch-fill:   #93c5fd;
+    --mesh-arch-halo:   rgba(147, 197, 253, 0.30);
+    --mesh-distro-fill: #60a5fa;
+    --mesh-distro-halo: rgba(96, 165, 250, 0.22);
+    --mesh-hub-fill:    #bfdbfe;
+    --mesh-hub-halo:    rgba(191, 219, 254, 0.36);
+    --mesh-microvm-fill:  #7dd3fc;
+    --mesh-microvm-halo:  rgba(125, 211, 252, 0.50);
+    --mesh-edge-mesh:     rgba(125, 211, 252, 0.80);
+    --mesh-infra-fill:    #a5b4fc;
+    --mesh-infra-halo:    rgba(165, 180, 252, 0.50);
+    --mesh-infra-label:   rgba(199, 210, 254, 0.95);
+    --mesh-label-fg:    #bfdbfe;
+    --mesh-container-dc-fill:     rgba(96, 165, 250, 0.08);
+    --mesh-container-dc-stroke:   rgba(147, 197, 253, 0.65);
+    --mesh-container-rack-fill:   rgba(96, 165, 250, 0.15);
+    --mesh-container-rack-stroke: rgba(147, 197, 253, 0.55);
+    --mesh-container-label-fg:    rgba(219, 234, 254, 0.95);
+    --hero-gradient-1:  rgba(96, 165, 250, 0.22);
+    --hero-gradient-2:  rgba(37, 99, 235, 0.30);
+  }
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--fg);
+  background: var(--bg);
+  margin: 0;
+  line-height: 1.6;
+}
+.container { max-width: 1080px; margin: 0 auto; padding: 0 1.5rem; }
+/* The hero holds both the headline + the wide mesh SVG. Let it
+   breathe on big monitors — 1500px keeps prose readable while
+   giving the diagram horizontal room. The viewport still gates
+   the actual width when smaller. */
+.hero .container { max-width: 1500px; }
+nav {
+  border-bottom: 1px solid var(--border);
+  padding: 1rem 0;
+  font-size: 0.9rem;
+  background: var(--bg);
+}
+nav .container { display: flex; justify-content: space-between; align-items: center; }
+nav .brand { font-weight: 600; letter-spacing: -0.01em; color: var(--accent); }
+nav a { color: var(--muted); text-decoration: none; margin-left: 1.25rem; }
+nav a:hover { color: var(--fg); }
+
+/* ---------- HERO ---------- */
+.hero {
+  position: relative;
+  padding: 3.5rem 0 2rem;
+  overflow: hidden;
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: -10% -10% 30% -10%;
+  background:
+    radial-gradient(60% 60% at 20% 30%, var(--hero-gradient-1) 0%, transparent 70%),
+    radial-gradient(50% 50% at 80% 70%, var(--hero-gradient-2) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+.hero .container { position: relative; z-index: 1; }
+.hero h1 {
+  font-size: 3rem;
+  margin: 0 0 1rem;
+  letter-spacing: -0.03em;
+  font-weight: 700;
+}
+.hero h1 .accent {
+  background: linear-gradient(135deg, var(--accent) 20%, var(--accent-2) 60%, var(--accent-3) 100%);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+.hero .tag {
+  font-size: 1.2rem;
+  color: var(--muted);
+  margin: 0 0 1.6rem;
+  font-style: italic;
+}
+.hero .intro p {
+  font-size: 1.05rem;
+  margin: 0 0 1.2rem;
+  max-width: 72ch;
+}
+
+/* ---------- MESH ---------- */
+.mesh {
+  position: relative;
+  margin: 2rem 0 1rem;
+  padding: 1rem 0 0.5rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, transparent 0%, var(--bg-2) 60%, transparent 100%);
+}
+.mesh svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* No height cap — preserve the SVG's natural aspect ratio
+     (viewBox 1200×540 → ~9:4) so a wider viewport gets a
+     proportionally taller diagram. */
+}
+.mesh-caption {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+.mesh-caption strong { color: var(--accent); }
+
+.mesh .edge    { stroke: var(--mesh-edge);    stroke-width: 1.4; fill: none; stroke-linecap: round; }
+.mesh .edge.hi { stroke: var(--mesh-edge-hi); stroke-width: 2.2; }
+.mesh .label   { fill: var(--mesh-label-fg); font: 600 13px ui-sans-serif, system-ui, sans-serif; text-anchor: middle; letter-spacing: 0.04em; }
+
+/* Containers — DC (datacenter / AZ) + Rack. The DC box is the
+   outer logical boundary (dashed) ; the Rack box is the inner
+   physical unit (solid). Both are "low-density" backdrops :
+   their fill is barely-there so the foreground nodes pop. */
+.mesh .container-dc {
+  fill:   var(--mesh-container-dc-fill);
+  stroke: var(--mesh-container-dc-stroke);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 6;
+}
+.mesh .container-rack {
+  fill:   var(--mesh-container-rack-fill);
+  stroke: var(--mesh-container-rack-stroke);
+  stroke-width: 1;
+}
+.mesh .container-label {
+  fill: var(--mesh-container-label-fg);
+  font: 700 14px ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.mesh .container-label-rack {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;
+}
+
+.mesh .kind-cp     .halo { fill: var(--mesh-cp-halo);     animation: nodepulse 2.8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+.mesh .kind-cp     .core { fill: var(--mesh-cp-fill); }
+.mesh .kind-agent  .halo { fill: var(--mesh-agent-halo);  animation: nodepulse 3.8s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+.mesh .kind-agent  .core { fill: var(--mesh-agent-fill); }
+.mesh .kind-arch   .halo { fill: var(--mesh-arch-halo);   animation: nodepulse 3.2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+.mesh .kind-arch   .core { fill: var(--mesh-arch-fill); }
+.mesh .kind-distro .halo { fill: var(--mesh-distro-halo); animation: nodepulse 4s   ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+.mesh .kind-distro .core { fill: var(--mesh-distro-fill); }
+.mesh .kind-hub    .halo { fill: var(--mesh-hub-halo);    animation: nodepulse 2.4s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+.mesh .kind-hub    .core { fill: var(--mesh-hub-fill); }
+/* microvm — smaller halo + faster pulse to suggest "lots of
+   small workloads churning". Sky-tinted blue so they read as
+   guests-on-hosts rather than control-plane nodes. */
+.mesh .kind-microvm .halo { fill: var(--mesh-microvm-halo); animation: nodepulse 2.2s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+.mesh .kind-microvm .core { fill: var(--mesh-microvm-fill); }
+
+/* Infrastructure microvms — etcd, nats, dex, zot. Same shape
+   as a tenant microvm but indigo so the eye distinguishes
+   "platform-hosted infra" from "tenant workloads". Labels are
+   small + tracked to fit under the tiny node. */
+.mesh .kind-infra .halo { fill: var(--mesh-infra-halo); animation: nodepulse 2.6s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+.mesh .kind-infra .core { fill: var(--mesh-infra-fill); }
+.mesh .kind-infra .label {
+  fill: var(--mesh-infra-label);
+  font: 600 9px ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: none;
+}
+
+/* Plane swimlane labels — "CONTROL PLANE" / "DATA PLANE"
+   rendered vertically in the left margin. Same uppercase /
+   tracked treatment as the DC labels but rotated. */
+.mesh .plane-label {
+  fill: var(--mesh-container-label-fg);
+  font: 700 12px ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  text-anchor: middle;
+}
+
+/* Mesh-network edges — the WireGuard threads connecting
+   microVMs across DCs. Dashed so the eye reads them as
+   "logical / overlay" rather than "physical / wired". */
+.mesh .edge.kind-mesh {
+  stroke: var(--mesh-edge-mesh);
+  stroke-width: 1.6;
+  stroke-dasharray: 3 5;
+}
+
+/* Highlighted mesh edges — used for the weft daemon HA
+   chain. Brighter + thicker than a regular mesh stroke
+   but still dashed (it's still an overlay link). */
+.mesh .edge.hi.kind-mesh {
+  stroke: var(--mesh-edge-hi);
+  stroke-width: 2.4;
+  stroke-dasharray: 4 4;
+}
+
+@keyframes nodepulse {
+  0%, 100% { transform: scale(1);   opacity: 0.85; }
+  50%      { transform: scale(1.45); opacity: 0.25; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mesh .halo { animation: none; }
+  .mesh animateMotion { display: none; }
+}
+
+/* ---------- BODY SECTIONS ---------- */
+h2 {
+  margin-top: 3rem;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;
+}
+h3 { font-size: 1.05rem; margin-top: 1.5rem; }
+code {
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+pre {
+  background: var(--code-bg);
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  border: 1px solid var(--border);
+}
+pre code { background: none; padding: 0; font-size: 1em; }
+ul.features { padding-left: 1.2rem; }
+ul.features li { margin-bottom: 0.5rem; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+.card {
+  border: 1px solid var(--border);
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  background: var(--bg);
+  transition: border-color 0.18s, transform 0.18s;
+}
+.card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.card h4 { margin: 0 0 0.3rem; font-size: 0.95rem; font-weight: 600; }
+.card p  { margin: 0; font-size: 0.88rem; color: var(--muted); }
+
+.status {
+  display: inline-block;
+  padding: 0.15rem 0.6rem;
+  background: var(--thread);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+}
+footer {
+  margin-top: 4rem;
+  border-top: 1px solid var(--border);
+  padding: 1.5rem 0;
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+a { color: var(--accent); }
+a:hover { color: var(--accent-2); }

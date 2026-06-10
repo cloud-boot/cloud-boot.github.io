@@ -1,0 +1,81 @@
+{{ define "main" }}
+<section class="hero">
+  <h1>
+    <span class="accent">{{ .Site.Params.heroAccent }}</span>
+    {{- with .Site.Params.statusBadge }}<span class="status">{{ . }}</span>{{ end -}}
+  </h1>
+  {{ with .Site.Params.heroTagline }}<p class="tag">{{ . }}</p>{{ end }}
+  <div class="intro">
+    {{ range .Site.Params.heroIntro }}<p>{{ . | safeHTML }}</p>{{ end }}
+  </div>
+
+  {{ partial "mesh.html" . }}
+</section>
+
+<section id="why">
+  <h2>Why cloud-boot</h2>
+  <p>
+    Cloud images are built once, by the distro vendor, signed by the distro vendor, and meant to boot
+    unmodified on any hypervisor. The reality is that each hypervisor wants a slightly different boot
+    envelope — UEFI here, direct kernel there, a custom GRUB config somewhere else. <strong>cloud-boot</strong>
+    is the glue : it lets the same untouched cloud image boot under KVM/OVMF, Apple VZ, and OpenStack
+    without rebuilding the image and without trusting yet another bootloader.
+  </p>
+</section>
+
+<section id="paths">
+  <h2>Three paths, one outcome</h2>
+  <div class="grid">
+    <div class="card">
+      <h4>UKI + init + kexec</h4>
+      <p>Production target on Linux hosts (QEMU/OVMF, OpenStack). Boots a UKI, the init reaches the stock kernel via kexec. Predictable, fast, kernel-version-flexible.</p>
+    </div>
+    <div class="card">
+      <h4>Pure-UEFI loader</h4>
+      <p>Apple Virtualization.framework can't kexec — the loader stays in UEFI all the way through. Pure-Go via TinyGo + the <code>peln</code> linker. Multi-arch.</p>
+    </div>
+    <div class="card">
+      <h4>UKI menu-then-reboot</h4>
+      <p>The hybrid path : a UKI menu runs as PID 1, fetches the target plan over OCI, stages a <code>Boot####</code>/<code>BootOrder</code>, then <code>reboot(2)</code>. Works under VZ + OpenStack + bare metal.</p>
+    </div>
+  </div>
+</section>
+
+<section id="matrix">
+  <h2>Architecture × hypervisor matrix</h2>
+  <ul class="features">
+    <li><strong>x86_64</strong> — KVM/QEMU/OVMF · OpenStack · Apple VZ (Intel Macs) · bare metal</li>
+    <li><strong>arm64</strong> — Apple VZ (Apple silicon) · KVM/QEMU/OVMF · OpenStack · Raspberry Pi</li>
+    <li><strong>riscv64</strong> — QEMU · early hardware (VisionFive 2)</li>
+    <li><strong>loongarch64</strong> — QEMU · early hardware (3A6000)</li>
+    <li><strong>Six Linux families</strong> — Ubuntu, Debian, Rocky, Fedora, Alpine, SUSE — verified.</li>
+    <li><strong>Three BSDs</strong> — FreeBSD 14.3, NetBSD 10.0, OpenBSD 7.6 (via <code>LoadImage(DevicePath)</code>).</li>
+    <li><strong>Windows</strong> — booted via <code>LoadImage(DevicePath)</code> handoff to <code>bootmgfw.efi</code>. Stub-only redistribution under MIT ; operators bring their own license.</li>
+  </ul>
+</section>
+
+<section id="components">
+  <h2>Components</h2>
+  <div class="grid">
+    <div class="card"><h4>cloud-boot</h4><p>The top-level CLI. <code>cloud-boot iso</code> assembles a multi-arch hybrid ISO from per-arch UKIs.</p></div>
+    <div class="card"><h4>loader/</h4><p>Pure-UEFI, pure-Go bootloader. The production target on Apple VZ.</p></div>
+    <div class="card"><h4>uki/</h4><p>UKI assembler + the menu-then-reboot init that runs as PID 1 inside the staged UKI.</p></div>
+    <div class="card"><h4>peln</h4><p>Pure-Go COFF/PE linker covering amd64 / arm64 / riscv64 / loongarch64. Replaces <code>lld-link</code> for the last two.</p></div>
+    <div class="card"><h4>tinygo-riscv64-uefi / tinygo-loongarch64-uefi</h4><p>TinyGo runtime shims that produce baremetal UEFI binaries for the two emerging architectures.</p></div>
+    <div class="card"><h4>go-bootloaders/grub · systemd-boot</h4><p>Parsers for legacy bootloader configs — used by the menu init to enumerate target OSes on an existing ESP.</p></div>
+    <div class="card"><h4>go-filesystems/*</h4><p>Pure-Go read-only drivers for ext4, xfs, btrfs, zfs, apfs — lets the init mount the target's root without kernel FS modules.</p></div>
+    <div class="card"><h4>go-fde/* + go-crypto/*</h4><p>Full-disk-encryption (LUKS, APFS FDE) + the crypto primitives behind them, also pure-Go.</p></div>
+  </div>
+</section>
+
+<section id="weft">
+  <h2>Sibling : Weft</h2>
+  <p>
+    <strong>cloud-boot</strong> is the boot toolchain ;
+    <strong><a href="https://openweft.github.io">Weft</a></strong> is the cloud platform that uses it.
+    Weft creates VMs, schedules them across a multi-DC cluster, and points each one at a cloud-boot UKI —
+    the same UKI on x86_64 and arm64, the same UKI for Ubuntu and FreeBSD. The two projects share an
+    ethos (pure Go, multi-arch, no rebuild per target) and a colour palette.
+  </p>
+</section>
+{{ end }}

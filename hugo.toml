@@ -1,0 +1,42 @@
+baseURL = 'https://cloud-boot.github.io/'
+locale  = 'en-us'
+title   = 'cloud-boot'
+# No theme — layouts live in ./layouts
+
+disableKinds = ['taxonomy', 'term', 'rss', 'sitemap']
+
+[params]
+  description = "cloud-boot is a UKI toolchain, a TinyGo UEFI loader, and a pure-Go TamaGo bare-metal UEFI loader that boots unmodified Linux, FreeBSD, NetBSD, OpenBSD cloud images (and Windows via DevicePath handoff) on KVM/QEMU, Apple Virtualization.framework, and OpenStack — across amd64, arm64, riscv64, and loongarch64."
+  brand       = "cloud-boot"
+  github      = "cloud-boot"
+  heroAccent  = "cloud-boot"
+  heroTagline = "From firmware entry to distro userspace — pure Go, four arches, one ISO."
+
+  heroIntro = [
+    "<strong>cloud-boot</strong> boots an unmodified cloud image on any UEFI hypervisor. Two complementary tracks coexist : <em>Phase 1</em> ships a UKI toolchain plus three boot paths (<em>kexec</em>, <em>UKI menu-then-reboot</em>, <em>pure-UEFI TinyGo loader</em>) that all land on the same stock OS userspace ; <em>Phase 2</em> is a pure-Go TamaGo bare-metal UEFI loader that walks PCI, drives virtio-net, speaks DHCPv4 / DNS / TLS / HTTPS / OCI v2, verifies cosign signatures, and chain-boots the distro kernel — entirely inside Boot Services, no cgo, no external linker.",
+    "One multi-arch hybrid ISO embeds <code>BOOTX64.EFI</code> + <code>BOOTAA64.EFI</code> + <code>BOOTRISCV64.EFI</code> + <code>BOOTLOONGARCH64.EFI</code> ; firmware on each CPU reads only its own arch's file. <strong>Phase 2 is live end-to-end on arm64 + riscv64 + loong64 today</strong> — a TamaGo PE32+ EFI binary reaches Linux's <code>Booting Linux Kernel...</code> banner from a fresh DHCP lease against a public OCI registry. The amd64 firmware-bug chase is ongoing."
+  ]
+
+  meshCaption = "<strong>One ISO, four architectures, ten OS families — plus pure-Go Phase 2.</strong> The same <code>cloud-boot.iso</code> ships <code>BOOTX64.EFI</code> + <code>BOOTAA64.EFI</code> + <code>BOOTRISCV64.EFI</code> + <code>BOOTLOONGARCH64.EFI</code> ; spheres are boot envelopes landing on each (arch, OS) target. The Phase 2 TamaGo loader follows the same multi-arch shape : <code>arm64 + riscv64 + loong64</code> are live, <code>amd64</code> is in chase."
+
+[menu]
+  [[menu.main]]
+    identifier = "why"
+    name       = "Why"
+    url        = "#why"
+    weight     = 10
+  [[menu.main]]
+    identifier = "paths"
+    name       = "Three paths"
+    url        = "#paths"
+    weight     = 20
+  [[menu.main]]
+    identifier = "matrix"
+    name       = "Arch × hypervisor"
+    url        = "#matrix"
+    weight     = 30
+  [[menu.main]]
+    identifier = "components"
+    name       = "Components"
+    url        = "#components"
+    weight     = 40

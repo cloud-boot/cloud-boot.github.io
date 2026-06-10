@@ -1,0 +1,7 @@
+# Hugo build output
+public/
+resources/_gen/
+
+# Hugo lock for module-based themes — we don't use a theme but
+# keeping the entry future-proofs the file
+.hugo_build.lock

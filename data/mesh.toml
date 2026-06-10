@@ -1,0 +1,244 @@
+# cloud-boot mesh visualisation — read by layouts/partials/mesh.html.
+#
+# Top row : four arch nodes (x86_64, arm64, riscv64, loongarch64).
+# Centre  : the multi-arch ISO hub.
+# Bottom  : seven OS family nodes (six Linux families + 3 BSDs are
+#           sampled here ; Windows is mentioned in the text but not
+#           drawn — its DevicePath path doesn't share the EFI
+#           binary set).
+#
+# Spheres are boot envelopes flowing hub → arch → distro, encoding
+# "one ISO, many targets".
+
+# ---------- Nodes ----------
+
+# Arches (top row). Labels above.
+[[nodes]]
+x = 160
+y = 130
+kind = "arch"
+label = "x86_64"
+halo_r = 16
+core_r = 9
+label_y = -26
+[[nodes]]
+x = 460
+y = 110
+kind = "arch"
+label = "arm64"
+halo_r = 16
+core_r = 9
+label_y = -26
+[[nodes]]
+x = 760
+y = 110
+kind = "arch"
+label = "riscv64"
+halo_r = 16
+core_r = 9
+label_y = -26
+[[nodes]]
+x = 1060
+y = 130
+kind = "arch"
+label = "loongarch64"
+halo_r = 16
+core_r = 9
+label_y = -26
+
+# Centre hub : the multi-arch ISO.
+[[nodes]]
+x = 600
+y = 290
+kind = "hub"
+label = "cloud-boot.iso"
+halo_r = 26
+core_r = 14
+label_y = 48
+
+# Distros (bottom row). Labels below.
+[[nodes]]
+x = 100
+y = 460
+kind = "distro"
+label = "Ubuntu"
+halo_r = 12
+core_r = 6
+label_y = 26
+[[nodes]]
+x = 260
+y = 470
+kind = "distro"
+label = "Debian"
+halo_r = 12
+core_r = 6
+label_y = 26
+[[nodes]]
+x = 420
+y = 480
+kind = "distro"
+label = "Rocky"
+halo_r = 12
+core_r = 6
+label_y = 26
+[[nodes]]
+x = 580
+y = 480
+kind = "distro"
+label = "Alpine"
+halo_r = 12
+core_r = 6
+label_y = 26
+[[nodes]]
+x = 740
+y = 480
+kind = "distro"
+label = "FreeBSD"
+halo_r = 12
+core_r = 6
+label_y = 26
+[[nodes]]
+x = 900
+y = 470
+kind = "distro"
+label = "NetBSD"
+halo_r = 12
+core_r = 6
+label_y = 26
+[[nodes]]
+x = 1060
+y = 460
+kind = "distro"
+label = "OpenBSD"
+halo_r = 12
+core_r = 6
+label_y = 26
+
+# ---------- Edges ----------
+
+# Hub → arches (highlighted = the four EFI binaries in the ISO).
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 160
+y2 = 130
+highlight = true
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 460
+y2 = 110
+highlight = true
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 760
+y2 = 110
+highlight = true
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 1060
+y2 = 130
+highlight = true
+
+# Hub → distros (the OS families it boots).
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 100
+y2 = 460
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 260
+y2 = 470
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 420
+y2 = 480
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 580
+y2 = 480
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 740
+y2 = 480
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 900
+y2 = 470
+[[edges]]
+x1 = 600
+y1 = 290
+x2 = 1060
+y2 = 460
+
+# Arch-row links — same ISO, four boot binaries inside.
+[[edges]]
+x1 = 160
+y1 = 130
+x2 = 460
+y2 = 110
+[[edges]]
+x1 = 460
+y1 = 110
+x2 = 760
+y2 = 110
+[[edges]]
+x1 = 760
+y1 = 110
+x2 = 1060
+y2 = 130
+
+# ---------- Paths (moving spheres) ----------
+#
+# Each sphere is one (arch, distro) boot envelope landing on its
+# target. Staggered timing so the eye sees a continuous boot flow.
+
+[[paths]]
+d = "M 600 290 L 160 130 L 100 460"
+dur = "5s"
+r = 5
+fill = "var(--accent-3)"
+[[paths]]
+d = "M 600 290 L 160 130 L 260 470"
+dur = "5.5s"
+begin = "0.6s"
+r = 5
+fill = "var(--accent-3)"
+[[paths]]
+d = "M 600 290 L 460 110 L 420 480"
+dur = "5s"
+begin = "1.2s"
+r = 5
+fill = "var(--accent-2)"
+[[paths]]
+d = "M 600 290 L 460 110 L 580 480"
+dur = "6s"
+begin = "1.8s"
+r = 5
+fill = "var(--accent-2)"
+[[paths]]
+d = "M 600 290 L 760 110 L 740 480"
+dur = "5.5s"
+begin = "2.4s"
+r = 5
+fill = "var(--accent)"
+[[paths]]
+d = "M 600 290 L 1060 130 L 900 470"
+dur = "6s"
+begin = "3s"
+r = 5
+fill = "var(--accent-3)"
+[[paths]]
+d = "M 600 290 L 1060 130 L 1060 460"
+dur = "5s"
+begin = "3.6s"
+r = 5
+fill = "var(--accent)"

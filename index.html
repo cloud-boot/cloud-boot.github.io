@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>weft — a Go-native multi-host cloud platform</title>
+<meta name="description" content="weft is a Go-native, multi-host, multi-tenant cloud platform. The control plane keeps the data; per-host agents own the drivers; workloads move across the mesh like a shuttle through a loom." />
+<meta property="og:title" content="weft" />
+<meta property="og:description" content="A Go-native multi-host cloud platform. Workloads flow across the mesh — control plane, agents, drivers." />
+<meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%2360a5fa'/%3E%3Cstop offset='1' stop-color='%23a5b4fc'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='url(%23g)'/%3E%3Cg stroke='%23070815' stroke-width='3' fill='none' stroke-linecap='round'%3E%3Cline x1='14' y1='22' x2='50' y2='22'/%3E%3Cline x1='14' y1='42' x2='50' y2='42'/%3E%3Cline x1='22' y1='14' x2='22' y2='50'/%3E%3Cline x1='42' y1='14' x2='42' y2='50'/%3E%3C/g%3E%3Ccircle cx='32' cy='32' r='5' fill='%23070815'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+<nav class="topnav">
+  <a class="brand" href="#top">
+    <span class="brand-mark" aria-hidden="true"></span>
+    <span class="brand-name">weft</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#why">Why</a></li>
+    <li><a href="#mesh">Mesh</a></li>
+    <li><a href="#architecture">Architecture</a></li>
+    <li><a href="#repos">Repos</a></li>
+    <li><a href="#cloud-boot">cloud-boot</a></li>
+  </ul>
+  <div class="nav-actions">
+    <a class="nav-icon-btn" href="https://openweft.github.io/docs/" target="_blank" rel="noopener" title="Documentation">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M4 4h13a3 3 0 0 1 3 3v13a1 1 0 0 1-1 1H7a3 3 0 0 1-3-3V4zm2 2v14a1 1 0 0 0 1 1h11V7a1 1 0 0 0-1-1H6zm2 3h8v2H8V9zm0 4h8v2H8v-2zm0 4h5v2H8v-2z"/></svg>
+      <span>Docs</span>
+    </a>
+    <a class="nav-icon-btn nav-icon-btn-primary" href="https://github.com/openweft" target="_blank" rel="noopener" title="Source on GitHub">
+      <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.2 1.2.9-.3 1.9-.4 2.9-.4s2 .1 2.9.4c2.2-1.5 3.2-1.2 3.2-1.2.6 1.7.2 2.9.1 3.2.7.8 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+      <span>GitHub</span>
+    </a>
+  </div>
+</nav>
+
+<header id="top" class="hero">
+  <div class="hero-bg" aria-hidden="true">
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid"></div>
+  </div>
+
+  <div class="hero-inner">
+    <span class="eyebrow">Go · gRPC · etcd · NATS · macOS · Linux</span>
+    <h1 class="hero-title">
+      A <span class="grad">Go-native</span> multi-host cloud platform —
+      workloads flow across the <span class="grad">mesh.</span>
+    </h1>
+    <p class="hero-sub">
+      <strong>weft</strong> is the control plane plus per-host agents
+      that run virtual machines on a mesh of compute hosts. The control
+      plane owns the data &mdash; projects, users, networks, volumes,
+      security groups, ports, hosts, VM inventory &mdash; and the agents
+      own the drivers that talk to the hypervisor, the kernel, and the
+      storage backend. The shuttle moves between the nodes; the warp
+      stays put.
+    </p>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#architecture">See the architecture</a>
+      <a class="btn btn-ghost" href="https://github.com/openweft" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" aria-hidden="true" width="18" height="18"><path fill="currentColor" d="M12 .5C5.7.5.5 5.7.5 12c0 5.1 3.3 9.4 7.8 10.9.6.1.8-.2.8-.6v-2c-3.2.7-3.9-1.5-3.9-1.5-.5-1.3-1.3-1.7-1.3-1.7-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.6-.3-5.3-1.3-5.3-5.8 0-1.3.5-2.3 1.2-3.2-.1-.3-.5-1.5.1-3.2 0 0 1-.3 3.2 1.2.9-.3 1.9-.4 2.9-.4s2 .1 2.9.4c2.2-1.5 3.2-1.2 3.2-1.2.6 1.7.2 2.9.1 3.2.7.8 1.2 1.9 1.2 3.2 0 4.5-2.7 5.5-5.3 5.8.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6 4.5-1.5 7.8-5.8 7.8-10.9C23.5 5.7 18.3.5 12 .5z"/></svg>
+        GitHub
+      </a>
+    </div>
+
+    <!-- Animated mesh visualisation — pure SVG, declarative SMIL animations.
+         Nodes = hosts on the control plane; spheres = workloads dispatched
+         across the mesh. -->
+    <div class="mesh-stage" aria-label="weft mesh — workloads flowing between hosts">
+      <svg class="mesh-svg" viewBox="0 0 1200 540" preserveAspectRatio="xMidYMid meet" role="img">
+        <defs>
+          <!-- Soft glow filter for spheres -->
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="6" result="b"/>
+            <feMerge>
+              <feMergeNode in="b"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <!-- Subtle gradient for the mesh edges -->
+          <linearGradient id="edge" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#60a5fa" stop-opacity="0.55"/>
+            <stop offset="100%" stop-color="#a5b4fc" stop-opacity="0.18"/>
+          </linearGradient>
+          <!-- Radial gradient for node centres -->
+          <radialGradient id="nodeFill" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0%" stop-color="#dbeafe"/>
+            <stop offset="60%" stop-color="#60a5fa"/>
+            <stop offset="100%" stop-color="#1e3a8a"/>
+          </radialGradient>
+        </defs>
+
+        <!-- Mesh edges. Each line connects two nodes; the gradient gives them
+             a subtle direction without being noisy. -->
+        <g class="edges" stroke="url(#edge)" stroke-width="1.5" stroke-linecap="round" fill="none">
+          <line x1="200" y1="130" x2="480" y2="95"/>
+          <line x1="480" y1="95" x2="760" y2="110"/>
+          <line x1="760" y1="110" x2="1020" y2="200"/>
+          <line x1="200" y1="130" x2="160" y2="300"/>
+          <line x1="480" y1="95"  x2="560" y2="280"/>
+          <line x1="760" y1="110" x2="910" y2="320"/>
+          <line x1="1020" y1="200" x2="910" y2="320"/>
+          <line x1="160" y1="300" x2="560" y2="280"/>
+          <line x1="560" y1="280" x2="910" y2="320"/>
+          <line x1="160" y1="300" x2="300" y2="460"/>
+          <line x1="560" y1="280" x2="640" y2="470"/>
+          <line x1="910" y1="320" x2="980" y2="480"/>
+          <line x1="300" y1="460" x2="640" y2="470"/>
+          <line x1="640" y1="470" x2="980" y2="480"/>
+          <line x1="560" y1="280" x2="760" y2="110"/>
+          <line x1="560" y1="280" x2="1020" y2="200"/>
+          <line x1="300" y1="460" x2="160" y2="300"/>
+        </g>
+
+        <!-- Mesh nodes. Outer halo + inner core; each has a slow opacity pulse. -->
+        <g class="nodes">
+          <g transform="translate(200,130)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+          <g transform="translate(480,95)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+          <g transform="translate(760,110)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+          <g transform="translate(1020,200)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+          <g transform="translate(160,300)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+          <g transform="translate(560,280)"><circle r="18" class="halo halo-hub"/><circle r="9" fill="url(#nodeFill)"/></g>
+          <g transform="translate(910,320)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+          <g transform="translate(300,460)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+          <g transform="translate(640,470)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+          <g transform="translate(980,480)"><circle r="14" class="halo"/><circle r="7" fill="url(#nodeFill)"/></g>
+        </g>
+
+        <!-- Moving spheres. Each follows a multi-hop path via <animateMotion>.
+             Staggered durations + begin times so the eye sees a continuous
+             flow rather than a synchronised march. -->
+        <g class="spheres" filter="url(#glow)">
+          <circle r="6" fill="#bfdbfe">
+            <animateMotion dur="6s" repeatCount="indefinite"
+              path="M 200 130 L 480 95 L 560 280 L 640 470 L 980 480"/>
+          </circle>
+          <circle r="5" fill="#93c5fd">
+            <animateMotion dur="7.5s" begin="0.8s" repeatCount="indefinite"
+              path="M 760 110 L 910 320 L 560 280 L 160 300 L 300 460"/>
+          </circle>
+          <circle r="7" fill="#dbeafe">
+            <animateMotion dur="5s" begin="1.4s" repeatCount="indefinite"
+              path="M 1020 200 L 760 110 L 560 280 L 300 460"/>
+          </circle>
+          <circle r="5" fill="#60a5fa">
+            <animateMotion dur="8s" begin="2.1s" repeatCount="indefinite"
+              path="M 980 480 L 640 470 L 300 460 L 160 300 L 200 130"/>
+          </circle>
+          <circle r="6" fill="#a5b4fc">
+            <animateMotion dur="6.5s" begin="3s" repeatCount="indefinite"
+              path="M 160 300 L 560 280 L 910 320 L 1020 200"/>
+          </circle>
+          <circle r="4" fill="#e0e7ff">
+            <animateMotion dur="4.5s" begin="0.3s" repeatCount="indefinite"
+              path="M 480 95 L 560 280 L 760 110"/>
+          </circle>
+        </g>
+      </svg>
+      <p class="mesh-caption">
+        Hosts are nodes ; workloads (spheres) cross the mesh via the
+        control-plane dispatch table. <span class="hub-pin">Hub</span>
+        nodes carry the heaviest traffic.
+      </p>
+    </div>
+  </div>
+</header>
+
+<!-- ======================== WHY ======================== -->
+<section id="why" class="section">
+  <div class="container">
+    <h2 class="section-title reveal">Why weft</h2>
+    <p class="section-lede reveal">
+      VMs are stateful, hosts fail, drivers crash, and operators don't
+      want any of that to show through. weft is the smallest set of
+      components that lets a workload land on the right host, talk to
+      the right driver, and survive an agent reconnect — without a
+      kernel module on the host or a third-party agent fleet.
+    </p>
+
+    <div class="grid-3">
+      <div class="card reveal">
+        <h3>Control plane stays small</h3>
+        <p>
+          Eight UUID-keyed registries (projects, users, networks,
+          volumes, security groups, ports, hosts, VMs) backed by
+          etcd in production, by HCL files in dev. No business logic
+          in storage. Cross-registry validation centralised in the
+          Adapter.
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3>Drivers are interfaces first</h3>
+        <p>
+          Every side-effecting bit — VM lifecycle, network plumbing,
+          storage allocation, OCI image cache — sits behind a Go
+          interface in <code>weft-drivers</code>. <code>builtin</code>
+          for in-process today, gRPC plugins tomorrow, third-party
+          implementations whenever.
+        </p>
+      </div>
+      <div class="card reveal">
+        <h3>Mesh dispatch, not RPC fan-out</h3>
+        <p>
+          Each agent attaches its driver tuple to the control plane's
+          dispatch table under its host UUID. The scheduler picks a
+          host ; the dispatcher hands the call to that host's drivers ;
+          the result returns over the same stream. Same code path
+          for one host or fifty.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== MESH ======================== -->
+<section id="mesh" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title reveal">Where the metaphor comes from</h2>
+    <p class="section-lede reveal">
+      <strong>Weft</strong> is the crosswise thread in weaving — the
+      shuttle that moves through the stationary <em>warp</em> and
+      builds the fabric one pass at a time. That's the platform's
+      mental model in one word :
+    </p>
+    <div class="grid-2">
+      <div class="card reveal">
+        <h3>Warp — what stays put</h3>
+        <ul>
+          <li>The control plane and its registries.</li>
+          <li>The host inventory and the dispatch table.</li>
+          <li>etcd, NATS, dex, zot — the infra services that live as
+            micro-VMs <strong>on</strong> weft.</li>
+          <li>The driver interfaces : a v1 contract that survives
+            multiple driver implementations.</li>
+        </ul>
+      </div>
+      <div class="card reveal">
+        <h3>Weft — what crosses</h3>
+        <ul>
+          <li>VM lifecycle calls dispatched from the control plane
+            down to the right host's drivers.</li>
+          <li>Heartbeats up, driver-call results down, event-bus
+            messages everywhere.</li>
+          <li>The scheduler picking a host per request — first-fit
+            for one VM, anti-affinity for a 3-replica group.</li>
+          <li>Workloads migrating between hosts when one drains.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== ARCHITECTURE ======================== -->
+<section id="architecture" class="section">
+  <div class="container">
+    <h2 class="section-title reveal">The three roles</h2>
+    <p class="section-lede reveal">
+      Three binaries, one cluster. Each role has one job ; together
+      they form the loop that creates, starts, stops, and migrates
+      VMs across the mesh.
+    </p>
+
+    <div class="role-row">
+      <div class="role-card reveal">
+        <div class="role-badge"><code>weft</code></div>
+        <h3>Control plane</h3>
+        <p>
+          The central daemon. Owns the registries via the
+          <code>Storage</code> interface ; serves the public gRPC
+          API ; runs the scheduler ; routes lifecycle calls through
+          the dispatch table. Stateless beyond etcd.
+        </p>
+        <ul>
+          <li>Registries : projects, users, networks, volumes, SGs, ports, hosts, VMs</li>
+          <li>Scheduler with <code>PlacementRule</code> (anti-affinity AZ / Host)</li>
+          <li>Event bus : LocalEventBus for dev, NATS JetStream for prod</li>
+          <li>OIDC validation via dex ; per-project ACLs</li>
+        </ul>
+      </div>
+
+      <div class="role-card reveal">
+        <div class="role-badge"><code>vzd-agent</code></div>
+        <h3>Per-host agent</h3>
+        <p>
+          One process per compute node. Builds the local driver
+          bundle, registers with the control plane under its
+          persisted host UUID, then serves driver calls over a
+          long-lived bidirectional stream.
+        </p>
+        <ul>
+          <li>Persisted identity at <code>&lt;state-dir&gt;/host-uuid</code></li>
+          <li><code>RegisterAgent</code> → <code>AttachDrivers</code> → heartbeat loop</li>
+          <li>Owns the local driver Bundle from <code>weft-driver-vz/builtin</code></li>
+          <li>Reconciler aligns local state with the control plane's intent</li>
+        </ul>
+      </div>
+
+      <div class="role-card reveal">
+        <div class="role-badge"><code>weft-driver-*</code></div>
+        <h3>Drivers</h3>
+        <p>
+          Per-resource, per-platform implementations of the four
+          interfaces (Hypervisor, Network, Volume, Image). Each
+          driver lives in its own module ; eventually each in its
+          own repo so release cadence is independent.
+        </p>
+        <ul>
+          <li><code>weft-driver-vz</code> — Apple Virtualization.framework (macOS)</li>
+          <li><code>weft-driver-qemu-kvm</code> — Linux x86_64 / arm64 (planned)</li>
+          <li><code>weft-driver-wireguard</code> — mesh-type networks (planned)</li>
+          <li><code>weft-driver-ceph</code>, <code>-iscsi</code>, <code>-file</code> — volumes</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== REPOS ======================== -->
+<section id="repos" class="section section-alt">
+  <div class="container">
+    <h2 class="section-title reveal">Repos &amp; modules</h2>
+    <p class="section-lede reveal">
+      Today everything lives in one monorepo ; the eventual layout
+      under <code>github.com/cloud-boot</code> is one repo per driver
+      so vendors and operators can pin and patch independently.
+    </p>
+
+    <div class="repo-grid">
+      <a class="repo reveal" href="https://github.com/openweft/weft" target="_blank" rel="noopener">
+        <strong>weft</strong>
+        <span>Control plane : registries, scheduler, dispatch, gRPC API</span>
+      </a>
+      <a class="repo reveal" href="https://github.com/openweft/weft-agent" target="_blank" rel="noopener">
+        <strong>weft-agent</strong>
+        <span>Per-host worker : driver bundle owner, gRPC client</span>
+      </a>
+      <a class="repo reveal" href="https://github.com/openweft/weft-drivers" target="_blank" rel="noopener">
+        <strong>weft-drivers</strong>
+        <span>The driver interfaces &amp; types — the only thing every driver imports</span>
+      </a>
+      <a class="repo reveal" href="https://github.com/openweft/weft-driver-vz" target="_blank" rel="noopener">
+        <strong>weft-driver-vz</strong>
+        <span>Apple Virtualization.framework driver bundle (macOS only)</span>
+      </a>
+      <a class="repo reveal" href="https://github.com/openweft/weft-proto" target="_blank" rel="noopener">
+        <strong>weft-proto</strong>
+        <span>gRPC schemas : public <code>VzdService</code> + <code>AgentControlPlane</code></span>
+      </a>
+      <a class="repo reveal" href="https://github.com/openweft/weft-client" target="_blank" rel="noopener">
+        <strong>weft-client</strong>
+        <span>Public Go client + <code>weft</code> CLI (project / vm / network / …)</span>
+      </a>
+      <a class="repo reveal" href="https://github.com/openweft/weft-ui" target="_blank" rel="noopener">
+        <strong>weft-ui</strong>
+        <span>Web UI consuming the same gRPC API as the CLI</span>
+      </a>
+      <a class="repo reveal repo-soon" href="https://github.com/openweft" target="_blank" rel="noopener">
+        <strong>weft-driver-wireguard</strong>
+        <span>mesh-type network driver (planned)</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ======================== cloud-boot SIBLING ======================== -->
+<section id="cloud-boot" class="section">
+  <div class="container">
+    <h2 class="section-title reveal">cloud-boot — the sibling project</h2>
+    <p class="section-lede reveal">
+      <strong>cloud-boot</strong> is the boot toolchain that complements
+      weft. It's a tiny UEFI bootloader plus a UKI assembler that lets
+      weft boot unmodified Linux, FreeBSD, NetBSD, OpenBSD cloud
+      images — and Windows via DevicePath handoff — without rebuilding
+      them. One multi-arch hybrid ISO covers x86_64, arm64, riscv64
+      and loongarch64.
+    </p>
+    <p class="reveal" style="margin-top:24px;">
+      <a class="btn btn-ghost" href="https://github.com/cloud-boot" target="_blank" rel="noopener">
+        Visit cloud-boot →
+      </a>
+    </p>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container footer-row">
+    <span class="footer-brand">weft</span>
+    <span class="footer-meta">Go · gRPC · etcd · NATS · MIT-licensed</span>
+    <a class="footer-link" href="https://github.com/openweft" target="_blank" rel="noopener">github.com/openweft</a>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>

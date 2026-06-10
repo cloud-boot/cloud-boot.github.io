@@ -1,0 +1,9 @@
+<nav>
+  <div class="container">
+    <div class="brand">{{ .Site.Params.brand }}</div>
+    <div>
+      {{ range .Site.Menus.main }}<a href="{{ .URL }}">{{ .Name }}</a>{{ end }}
+      <a href="https://github.com/{{ .Site.Params.github }}">GitHub</a>
+    </div>
+  </div>
+</nav>
