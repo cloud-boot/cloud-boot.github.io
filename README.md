@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/cloud-boot/brand/main/social/cloud-boot.png" alt="cloud-boot/cloud-boot.github.io" width="720"></p>
+
 # cloud-boot/pages
 
 Sources for **cloud-boot.github.io** — the cloud-boot landing page.
