@@ -87,3 +87,12 @@ legacy files when the Hugo output is validated.
 [Weft](https://openweft.github.io) is the cloud platform that uses
 cloud-boot to boot its VMs. Same Hugo setup, same blue palette,
 different mesh metaphor. Both pages are intentionally cohesive.
+
+## The design is not here
+
+It comes from the shared Hugo module
+[`go-fleettools/landingkit`](https://github.com/go-fleettools/landingkit),
+pinned in `go.mod` (Renovate bumps it); `kit.go` keeps `go mod tidy` from
+deleting that requirement. `[params.brand]` in `hugo.toml` is read from the logo by
+`landingkit brand`. A file under `layouts/partials/` with the name of one of the
+kit's would silently override it.

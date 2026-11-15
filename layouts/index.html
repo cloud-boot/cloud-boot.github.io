@@ -1,18 +1,158 @@
-{{ define "main" }}
-<section class="hero">
-  <h1>
-    <span class="accent">{{ .Site.Params.heroAccent }}</span>
-    {{- with .Site.Params.statusBadge }}<span class="status">{{ . }}</span>{{ end -}}
-  </h1>
-  {{ with .Site.Params.heroTagline }}<p class="tag">{{ . }}</p>{{ end }}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ .Site.Title }} — a modern Go-native cloud platform</title>
+<meta name="description" content="{{ .Site.Params.description }}">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+{{ partial "styles.html" . }}
+{{/* The template's own rules for what <main> holds, kept for it alone (class legacy),
+     its colours read from the kit's tokens. Written by landingmigrate. */}}
+<style>
+.legacy{--fg:var(--ink);--bg-2:#e6edff;--muted:var(--slate);--accent-2:#60a5fa;--accent-3:#93c5fd;--code-bg:#e1eaff;--border:var(--line);--thread:#2563eb;--mesh-edge:rgba(37, 99, 235, 0.32);--mesh-edge-hi:rgba(37, 99, 235, 0.85);--mesh-cp-fill:#1d4ed8;--mesh-cp-halo:rgba(29, 78, 216, 0.30);--mesh-agent-fill:#60a5fa;--mesh-agent-halo:rgba(96, 165, 250, 0.22);--mesh-arch-fill:#2563eb;--mesh-arch-halo:rgba(37, 99, 235, 0.30);--mesh-distro-fill:#60a5fa;--mesh-distro-halo:rgba(96, 165, 250, 0.22);--mesh-hub-fill:#1d4ed8;--mesh-hub-halo:rgba(29, 78, 216, 0.36);--mesh-microvm-fill:#38bdf8;--mesh-microvm-halo:rgba(56, 189, 248, 0.45);--mesh-edge-mesh:rgba(56, 189, 248, 0.75);--mesh-infra-fill:#818cf8;--mesh-infra-halo:rgba(129, 140, 248, 0.45);--mesh-infra-label:rgba(67, 56, 202, 0.95);--mesh-label-fg:#1e3a8a;--mesh-container-dc-fill:rgba(37, 99, 235, 0.06);--mesh-container-dc-stroke:rgba(37, 99, 235, 0.55);--mesh-container-rack-fill:rgba(37, 99, 235, 0.14);--mesh-container-rack-stroke:rgba(37, 99, 235, 0.45);--mesh-container-label-fg:rgba(30, 58, 138, 0.85);--hero-gradient-1:rgba(96, 165, 250, 0.25);--hero-gradient-2:rgba(37, 99, 235, 0.18)}
+.legacy .mesh{position: relative;
+  margin: 2rem 0 1rem;
+  padding: 1rem 0 0.5rem;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, transparent 0%, var(--bg-2) 60%, transparent 100%);}
+.legacy .mesh svg{display: block;
+  width: 100%;
+  height: auto;}
+.legacy .mesh-caption{margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-align: center;
+  letter-spacing: 0.02em;}
+.legacy .mesh-caption strong{color: var(--accent);}
+.legacy .mesh .edge{stroke: var(--mesh-edge);    stroke-width: 1.4; fill: none; stroke-linecap: round;}
+.legacy .mesh .edge.hi{stroke: var(--mesh-edge-hi); stroke-width: 2.2;}
+.legacy .mesh .label{fill: var(--mesh-label-fg); font: 600 13px ui-sans-serif, system-ui, sans-serif; text-anchor: middle; letter-spacing: 0.04em;}
+.legacy .mesh .container-dc{fill:   var(--mesh-container-dc-fill);
+  stroke: var(--mesh-container-dc-stroke);
+  stroke-width: 1.5;
+  stroke-dasharray: 5 6;}
+.legacy .mesh .container-rack{fill:   var(--mesh-container-rack-fill);
+  stroke: var(--mesh-container-rack-stroke);
+  stroke-width: 1;}
+.legacy .mesh .container-label{fill: var(--mesh-container-label-fg);
+  font: 700 14px ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;}
+.legacy .mesh .container-label-rack{font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.10em;}
+.legacy .mesh .kind-cp .halo{fill: var(--mesh-cp-halo);     animation: nodepulse 2.8s ease-in-out infinite; transform-origin: center; transform-box: fill-box;}
+.legacy .mesh .kind-cp .core{fill: var(--mesh-cp-fill);}
+.legacy .mesh .kind-agent .halo{fill: var(--mesh-agent-halo);  animation: nodepulse 3.8s ease-in-out infinite; transform-origin: center; transform-box: fill-box;}
+.legacy .mesh .kind-agent .core{fill: var(--mesh-agent-fill);}
+.legacy .mesh .kind-arch .halo{fill: var(--mesh-arch-halo);   animation: nodepulse 3.2s ease-in-out infinite; transform-origin: center; transform-box: fill-box;}
+.legacy .mesh .kind-arch .core{fill: var(--mesh-arch-fill);}
+.legacy .mesh .kind-distro .halo{fill: var(--mesh-distro-halo); animation: nodepulse 4s   ease-in-out infinite; transform-origin: center; transform-box: fill-box;}
+.legacy .mesh .kind-distro .core{fill: var(--mesh-distro-fill);}
+.legacy .mesh .kind-hub .halo{fill: var(--mesh-hub-halo);    animation: nodepulse 2.4s ease-in-out infinite; transform-origin: center; transform-box: fill-box;}
+.legacy .mesh .kind-hub .core{fill: var(--mesh-hub-fill);}
+.legacy .mesh .kind-microvm .halo{fill: var(--mesh-microvm-halo); animation: nodepulse 2.2s ease-in-out infinite; transform-origin: center; transform-box: fill-box;}
+.legacy .mesh .kind-microvm .core{fill: var(--mesh-microvm-fill);}
+.legacy .mesh .kind-infra .halo{fill: var(--mesh-infra-halo); animation: nodepulse 2.6s ease-in-out infinite; transform-origin: center; transform-box: fill-box;}
+.legacy .mesh .kind-infra .core{fill: var(--mesh-infra-fill);}
+.legacy .mesh .kind-infra .label{fill: var(--mesh-infra-label);
+  font: 600 9px ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.04em;
+  text-transform: none;}
+.legacy .mesh .plane-label{fill: var(--mesh-container-label-fg);
+  font: 700 12px ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  text-anchor: middle;}
+.legacy .mesh .edge.kind-mesh{stroke: var(--mesh-edge-mesh);
+  stroke-width: 1.6;
+  stroke-dasharray: 3 5;}
+.legacy .mesh .edge.hi.kind-mesh{stroke: var(--mesh-edge-hi);
+  stroke-width: 2.4;
+  stroke-dasharray: 4 4;}
+@keyframes nodepulse{
+  .legacy 0%,.legacy 100%{transform: scale(1);   opacity: 0.85;}
+  .legacy 50%{transform: scale(1.45); opacity: 0.25;}
+}
+@media (prefers-reduced-motion: reduce){
+  .legacy .mesh .halo{animation: none;}
+  .legacy .mesh animateMotion{display: none;}
+}
+.legacy h2{margin-top: 3rem;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 0.4rem;}
+.legacy h3{font-size: 1.05rem; margin-top: 1.5rem;}
+.legacy code{font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+  background: var(--code-bg);
+  padding: 0.1em 0.35em;
+  border-radius: 3px;
+  font-size: 0.9em;}
+.legacy pre{background: var(--code-bg);
+  padding: 1rem 1.25rem;
+  border-radius: 6px;
+  overflow-x: auto;
+  font-size: 0.85rem;
+  line-height: 1.5;
+  border: 1px solid var(--border);}
+.legacy pre code{background: none; padding: 0; font-size: 1em;}
+.legacy ul.features{padding-left: 1.2rem;}
+.legacy ul.features li{margin-bottom: 0.5rem;}
+.legacy .grid{display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;}
+.legacy .card{border: 1px solid var(--border);
+  padding: 1rem 1.2rem;
+  border-radius: 8px;
+  background: var(--bg);
+  transition: border-color 0.18s, transform 0.18s;}
+.legacy .card:hover{border-color: var(--accent); transform: translateY(-1px);}
+.legacy .card h4{margin: 0 0 0.3rem; font-size: 0.95rem; font-weight: 600;}
+.legacy .card p{margin: 0; font-size: 0.88rem; color: var(--muted);}
+.legacy .status{display: inline-block;
+  padding: 0.15rem 0.6rem;
+  background: var(--thread);
+  color: #fff;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-left: 0.5rem;
+  vertical-align: middle;}
+</style>
+</head>
+<body class="lm">
+  <header class="nav"><div class="wrap">
+    <a class="brand" href="/"><img class="glyph" src="/favicon.svg" width="32" height="32" alt="cloud-boot logo"> {{ .Site.Title }}</a>
+    {{ partial "theme-toggle.html" . }}
+  </div></header>
+  {{ partial "fork-ribbon.html" "https://github.com/cloud-boot" }}
+
+  <div class="hero"><div class="wrap">
+    <div>
+      <h1 class="head"><span class="accent">{{ .Site.Params.heroAccent }}</span>
+    {{- with .Site.Params.statusBadge }}<span class="status">{{ . }}</span>{{ end -}}</h1>
+      <div class="legacy">{{ with .Site.Params.heroTagline }}<p class="tag">{{ . }}</p>{{ end }}
   <div class="intro">
     {{ range .Site.Params.heroIntro }}<p>{{ . | safeHTML }}</p>{{ end }}
   </div>
 
-  {{ partial "mesh.html" . }}
-</section>
+  {{ partial "mesh.html" . }}</div>
+    </div>
+    {{ partial "hero-carousel.html" . }}
+  </div></div>
 
-<section id="why">
+  {{ with .Site.Params.repos }}<div class="strip"><div class="wrap">
+    <span class="lead-line">One organisation, <b>{{ len . }}</b> repositories</span>
+    <div class="mods">{{ range . }}<a href="#repos">{{ .name }}</a>{{ end }}</div>
+  </div></div>{{ end }}
+
+  <main id="repos" class="legacy"><div class="wrap"><section id="why">
   <h2>Why cloud-boot</h2>
   <p>
     Cloud images are built once, by the distro vendor, signed by the distro vendor, and meant to boot
@@ -60,7 +200,7 @@
     <div class="card"><h4>cloud-boot</h4><p>The top-level CLI. <code>cloud-boot iso</code> assembles a multi-arch hybrid ISO from per-arch UKIs.</p></div>
     <div class="card"><h4>loader/</h4><p>Pure-UEFI, pure-Go bootloader. The production target on Apple VZ.</p></div>
     <div class="card"><h4>uki/</h4><p>UKI assembler + the menu-then-reboot init that runs as PID 1 inside the staged UKI.</p></div>
-    <div class="card"><h4>peln</h4><p>Pure-Go COFF/PE linker covering amd64 / arm64 / riscv64 / loongarch64. Replaces <code>lld-link</code> for the last two.</p></div>
+    <div class="card"><h4>peln</h4><p>{{ if not (and $.Site.Params.mantra $.Site.Params.mantra.goarch) }}Pure-Go COFF/PE linker covering amd64 / arm64 / riscv64 / loongarch64.{{ end }} Replaces <code>lld-link</code> for the last two.</p></div>
     <div class="card"><h4>tinygo-riscv64-uefi / tinygo-loongarch64-uefi</h4><p>TinyGo runtime shims that produce baremetal UEFI binaries for the two emerging architectures.</p></div>
     <div class="card"><h4>go-bootloaders/grub · systemd-boot</h4><p>Parsers for legacy bootloader configs — used by the menu init to enumerate target OSes on an existing ESP.</p></div>
     <div class="card"><h4>go-filesystems/*</h4><p>Pure-Go read-only drivers for ext4, xfs, btrfs, zfs, apfs — lets the init mount the target's root without kernel FS modules.</p></div>
@@ -77,5 +217,8 @@
     the same UKI on x86_64 and arm64, the same UKI for Ubuntu and FreeBSD. The two projects share an
     ethos (pure Go, multi-arch, no rebuild per target) and a colour palette.
   </p>
-</section>
-{{ end }}
+</section>  </div></main>
+
+  <footer><div class="wrap"><span>{{ .Site.Params.brandName }} — <a href="https://github.com/{{ .Site.Params.github }}">{{ .Site.Params.github }} on GitHub</a> · open source</span></div></footer>
+</body>
+</html>
